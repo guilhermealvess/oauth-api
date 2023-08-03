@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS apis(
     description VARCHAR NOT NULL,
     created_by VARCHAR NOT NULL,
     created_at TIMESTAMP DEFAULT NOW(),
-    updasted_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
     CONSTRAINT api_pkey PRIMARY KEY (id)
 );
 
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS permissions(
     is_active BOOLEAN DEFAULT false,
     action VARCHAR NULL NULL,
     created_at TIMESTAMP DEFAULT NOW(),
-    updasted_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
     FOREIGN KEY(api_id) REFERENCES apis(id),
     CONSTRAINT application_api_pkey PRIMARY KEY (id)
 );
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS clients(
     last_login TIMESTAMP,
     created_by VARCHAR NOT NULL,
     created_at TIMESTAMP DEFAULT NOW(),
-    updasted_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW(),
     CONSTRAINT client_pkey PRIMARY KEY (id)
 );
 
