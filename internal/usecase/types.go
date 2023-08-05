@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/guilhermealvess/oauth-api/internal/domain/entity"
 )
 
 type CreateApiServerInput struct {
@@ -26,5 +25,15 @@ type CreateApiServerOutput struct {
 	CreatedBy   string    `json:"created_by"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
-	Permissions []*entity.Permission
+	Permissions []*CreatePermissionOutput
+}
+
+type CreatePermissionOutput struct {
+	ID          uuid.UUID `json:"id"`
+	ApiID       uuid.UUID `json:"api_id"`
+	ApiResource string    `json:"api_resource"`
+	Action      string    `json:"action"`
+	IsActive    bool      `json:"is_active"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }

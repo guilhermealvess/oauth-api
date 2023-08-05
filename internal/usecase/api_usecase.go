@@ -25,12 +25,21 @@ func (a apiUse) CreateApiServer(ctx context.Context, input CreateApiServerInput)
 		return nil, err
 	}
 
+	var permissions []*CreatePermissionOutput
 	for _, p := range input.Permissions {
 		permission, err := entity.NewPermission(apiServer, p.Resource, p.Action)
 		if err != nil {
 			return nil, err
 		}
-		apiServer.Permissions = append(apiServer.Permissions, permission)
+		permissions = append(permissions, &CreatePermissionOutput{
+			ID:          permission.ID,
+			ApiID:       permission.ApiID,
+			ApiResource: permission.ApiResource,
+			Action:      permission.Action,
+			IsActive:    permission.IsActive,
+			CreatedAt:   permission.CreatedAt,
+			UpdatedAt:   permission.UpdatedAt,
+		})
 	}
 
 	if err := a.apiRepository.Save(ctx, apiServer); err != nil {
@@ -46,6 +55,6 @@ func (a apiUse) CreateApiServer(ctx context.Context, input CreateApiServerInput)
 		CreatedBy:   apiServer.CreatedBy,
 		CreatedAt:   apiServer.CreatedAt,
 		UpdatedAt:   apiServer.UpdatedAt,
-		Permissions: apiServer.Permissions,
+		Permissions: permissions,
 	}, nil
 }

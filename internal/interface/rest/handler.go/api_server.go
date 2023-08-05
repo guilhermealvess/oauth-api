@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/go-redis/redis/v8"
+	"github.com/guilhermealvess/oauth-api/config"
 	"github.com/guilhermealvess/oauth-api/internal/repository"
 	"github.com/guilhermealvess/oauth-api/internal/usecase"
 	"github.com/labstack/echo/v4"
@@ -16,7 +17,7 @@ type ApiServerHandler struct {
 func NewApiServerHandler() ApiServerHandler {
 	return ApiServerHandler{
 		usecase: usecase.NewApiUse(repository.NewApiServerRepository(redis.NewClient(&redis.Options{
-			Addr: "localhost:6379",
+			Addr: config.Config.RedisAddress,
 			DB:   0,
 		}))),
 	}

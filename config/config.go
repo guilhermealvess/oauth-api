@@ -6,14 +6,14 @@ import (
 	"github.com/Netflix/go-env"
 )
 
-type config struct {
-	DatabaseURL string `env:"DATABASE_URL"`
+var Config struct {
+	DatabaseURL  string `env:"DATABASE_URL"`
+	RedisAddress string `env:"REDIS_ADDR"`
 }
 
-var Config *config
-
 func init() {
-	if _, err := env.UnmarshalFromEnviron(Config); err != nil {
+	if _, err := env.UnmarshalFromEnviron(&Config); err != nil {
 		log.Fatal(err)
 	}
+	println(Config.DatabaseURL)
 }
