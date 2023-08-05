@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 
+	"github.com/go-redis/redis/v8"
 	"github.com/guilhermealvess/oauth-api/internal/interface/grpc/pb"
 	"github.com/guilhermealvess/oauth-api/internal/repository"
 	"github.com/guilhermealvess/oauth-api/internal/usecase"
@@ -16,7 +17,7 @@ type ApiServerHandler struct {
 func NewApiServerHandler() *ApiServerHandler {
 	return &ApiServerHandler{
 		usecase: usecase.NewApiUse(
-			repository.NewApiServerRepository(),
+			repository.NewApiServerRepository(redis.NewClient(&redis.Options{})),
 		),
 	}
 }
@@ -28,7 +29,7 @@ func (a *ApiServerHandler) Create(ctx context.Context, req *pb.CreateApiServerRe
 		CreatedBy:   req.CreatedBy,
 	}
 
-	out, err := a.usecase.CreateApiServer(in)
+	out, err := a.usecase.CreateApiServer(ctx, in)
 	if err != nil {
 		return nil, err
 	}

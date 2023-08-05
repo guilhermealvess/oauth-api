@@ -21,12 +21,14 @@ type ApiServer struct {
 
 func NewApiServer(name, desc, author string) (*ApiServer, error) {
 	now := time.Now().UTC()
+	name = removeSpecialCharacters(name)
+	slug := slugFy(name)
 	api := ApiServer{
 		ID:          uuid.New(),
 		Name:        name,
 		Description: desc,
+		Slug:        slug,
 		IsActive:    true,
-		Slug:        name, // TODO:
 		CreatedBy:   author,
 		CreatedAt:   now,
 		UpdatedAt:   now,

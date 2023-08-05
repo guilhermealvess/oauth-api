@@ -1,12 +1,14 @@
 package usecase
 
 import (
+	"context"
+
 	"github.com/guilhermealvess/oauth-api/internal/domain/entity"
 	"github.com/guilhermealvess/oauth-api/internal/domain/repository"
 )
 
 type ApiUsecase interface {
-	CreateApiServer(input CreateApiServerInput) (*CreateApiServerOutput, error)
+	CreateApiServer(ctx context.Context, input CreateApiServerInput) (*CreateApiServerOutput, error)
 }
 
 type apiUse struct {
@@ -17,7 +19,7 @@ func NewApiUse(repo repository.ApiServerRepository) ApiUsecase {
 	return apiUse{repo}
 }
 
-func (a apiUse) CreateApiServer(input CreateApiServerInput) (*CreateApiServerOutput, error) {
+func (a apiUse) CreateApiServer(ctx context.Context, input CreateApiServerInput) (*CreateApiServerOutput, error) {
 	apiServer, err := entity.NewApiServer(input.Name, input.Description, input.CreatedBy)
 	if err != nil {
 		return nil, err
@@ -31,7 +33,7 @@ func (a apiUse) CreateApiServer(input CreateApiServerInput) (*CreateApiServerOut
 		apiServer.Permissions = append(apiServer.Permissions, permission)
 	}
 
-	if err := a.apiRepository.Save(apiServer); err != nil {
+	if err := a.apiRepository.Save(ctx, apiServer); err != nil {
 		return nil, err
 	}
 

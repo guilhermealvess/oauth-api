@@ -4,6 +4,7 @@ import (
 	"crypto/sha1"
 	"encoding/hex"
 	"math/rand"
+	"strings"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -35,11 +36,12 @@ type Client struct {
 func NewClient(name, desc, author string, permissions []*Permission) (*Client, string, error) {
 	now := time.Now().UTC()
 	round := rand.Intn(20) + 1
+	name = removeSpecialCharacters(name)
 	client := Client{
 		ID:                    uuid.New(),
 		Name:                  name,
 		Description:           desc,
-		Slug:                  name,
+		Slug:                  slugFy(name),
 		IsActive:              true,
 		RoundHashClientSecret: round,
 		ClientKey:             "",
@@ -51,6 +53,7 @@ func NewClient(name, desc, author string, permissions []*Permission) (*Client, s
 		Permissions:           permissions,
 	}
 
+	client.setSlug()
 	client.generateSecrets()
 	secret := randomString(length)
 	client.HashClientSecret = client.HashSecret(secret)
@@ -60,6 +63,13 @@ func NewClient(name, desc, author string, permissions []*Permission) (*Client, s
 
 func (c *Client) Ok() error {
 	return validator.New().Struct(c)
+}
+
+func (c *Client) setSlug() {
+	slug := strings.ToLower(c.Name)
+	slug = strings.ReplaceAll(slug, " ", "-")
+	slug = strings.ReplaceAll(slug, "_", "-")
+	c.Slug = slug
 }
 
 func (c *Client) generateSecrets() {
@@ -77,13 +87,4 @@ func (c *Client) HashSecret(secret string) string {
 		secret = hex.EncodeToString(hashSum)
 	}
 	return secret
-}
-
-func randomString(l int) string {
-	rand.Seed(time.Now().UnixNano())
-	b := make([]byte, l)
-	for i := range b {
-		b[i] = letters[rand.Intn(len(letters))]
-	}
-	return string(b)
 }

@@ -1,7 +1,11 @@
 package repository
 
-import "github.com/guilhermealvess/oauth-api/internal/domain/entity"
+import (
+	"context"
+
+	"github.com/guilhermealvess/oauth-api/internal/domain/entity"
+)
 
 type ApiServerRepository interface {
-	Save(*entity.ApiServer) error
+	Save(context.Context, *entity.ApiServer) error
 }
