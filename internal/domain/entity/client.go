@@ -1,8 +1,6 @@
 package entity
 
 import (
-	"crypto/sha1"
-	"encoding/hex"
 	"math/rand"
 	"strings"
 	"time"
@@ -35,28 +33,23 @@ type Client struct {
 
 func NewClient(name, desc, author string, permissions []*Permission) (*Client, string, error) {
 	now := time.Now().UTC()
-	round := rand.Intn(20) + 1
 	name = removeSpecialCharacters(name)
 	client := Client{
-		ID:                    uuid.New(),
-		Name:                  name,
-		Description:           desc,
-		Slug:                  slugFy(name),
-		IsActive:              true,
-		RoundHashClientSecret: round,
-		ClientKey:             "",
-		HashClientSecret:      "",
-		SaltHashClientSecret:  "",
-		CreatedBy:             author,
-		CreatedAt:             now,
-		UpdatedAt:             now,
-		Permissions:           permissions,
+		ID:          uuid.New(),
+		Name:        name,
+		Description: desc,
+		Slug:        slugFy(name),
+		IsActive:    true,
+		CreatedBy:   author,
+		CreatedAt:   now,
+		UpdatedAt:   now,
+		Permissions: permissions,
 	}
 
 	client.setSlug()
 	client.generateSecrets()
 	secret := randomString(length)
-	client.HashClientSecret = client.HashSecret(secret)
+	client.HashClientSecret = calculateSHA256(secret, client.SaltHashClientSecret, client.RoundHashClientSecret)
 
 	return &client, secret, client.Ok()
 }
@@ -75,16 +68,6 @@ func (c *Client) setSlug() {
 func (c *Client) generateSecrets() {
 	c.ClientKey = randomString(length)
 	c.SaltHashClientSecret = randomString(length)
-}
-
-func (c *Client) HashSecret(secret string) string {
-	for i := 0; i < c.RoundHashClientSecret; i++ {
-		secret = secret + c.SaltHashClientSecret
-
-		hash := sha1.New()
-		hash.Write([]byte(secret))
-		hashSum := hash.Sum(nil)
-		secret = hex.EncodeToString(hashSum)
-	}
-	return secret
+	round := rand.Intn(20) + 1
+	c.RoundHashClientSecret = round
 }

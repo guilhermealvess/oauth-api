@@ -49,5 +49,13 @@ func (u *userUse) UserSignIn(ctx context.Context, email, password string) (strin
 		return "", err
 	}
 
-	return user.SignIn(password)
+	token, err := user.SignIn(password)
+	if err != nil {
+		return "", err
+	}
+
+	if err := u.repository.Save(ctx, user); err != nil {
+		return "", err
+	}
+	return token, nil
 }

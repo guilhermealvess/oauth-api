@@ -65,5 +65,11 @@ func (u *User) SignIn(password string) (string, error) {
 	if passwordEncoded != u.HashPassword {
 		return "", fmt.Errorf("Forbidden, user %s not authorized", u.Name)
 	}
-	return u.buildTokenPayload()
+	token, err := u.buildTokenPayload()
+	if err != nil {
+		return "", err
+	}
+	now := time.Now().UTC()
+	u.LastLogin.Set(&now)
+	return token, nil
 }

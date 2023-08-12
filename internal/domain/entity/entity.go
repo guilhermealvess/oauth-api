@@ -33,7 +33,6 @@ func randomString(l int) string {
 func calculateSHA256(secret, salt string, round int) string {
 	for i := 0; i < round; i++ {
 		secret = secret + salt
-
 		hash := sha256.New()
 		hash.Write([]byte(secret))
 		hashSum := hash.Sum(nil)
