@@ -1,10 +1,12 @@
 package entity
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
 	"math/rand"
 	"regexp"
-	"time"
 	"strings"
+	"time"
 )
 
 func removeSpecialCharacters(input string) string {
@@ -26,4 +28,17 @@ func randomString(l int) string {
 		b[i] = letters[rand.Intn(len(letters))]
 	}
 	return string(b)
+}
+
+func calculateSHA256(secret, salt string, round int) string {
+	for i := 0; i < round; i++ {
+		secret = secret + salt
+
+		hash := sha256.New()
+		hash.Write([]byte(secret))
+		hashSum := hash.Sum(nil)
+		secret = hex.EncodeToString(hashSum)
+	}
+	return secret
+
 }

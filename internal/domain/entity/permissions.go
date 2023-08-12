@@ -8,25 +8,25 @@ import (
 )
 
 type Permission struct {
-	ID          uuid.UUID `validate:"required"`
-	ApiID       uuid.UUID `validate:"required"`
-	ApiResource string    `validate:"required"`
-	Action      string    `validate:"required"`
-	IsActive    bool      `validate:"required"`
-	CreatedAt   time.Time `validate:"required"`
-	UpdatedAt   time.Time `validate:"required"`
+	ID                  uuid.UUID `validate:"required"`
+	ApplicationID       uuid.UUID `validate:"required"`
+	ApplicationResource string    `validate:"required"`
+	Action              string    `validate:"required"`
+	CreatedBy           string    `validate:"required"`
+	CreatedAt           time.Time `validate:"required"`
+	UpdatedAt           time.Time `validate:"required"`
 }
 
-func NewPermission(api *ApiServer, resource, action string) (*Permission, error) {
+func NewPermission(application Application, resource, action, createdBy string) (*Permission, error) {
 	now := time.Now().UTC()
 	permission := Permission{
-		ID:          uuid.New(),
-		ApiID:       api.ID,
-		ApiResource: resource,
-		Action:      action,
-		IsActive:    true,
-		CreatedAt:   now,
-		UpdatedAt:   now,
+		ID:                  uuid.New(),
+		ApplicationID:       application.ID,
+		ApplicationResource: resource,
+		Action:              action,
+		CreatedBy:           createdBy,
+		CreatedAt:           now,
+		UpdatedAt:           now,
 	}
 
 	return &permission, permission.Ok()

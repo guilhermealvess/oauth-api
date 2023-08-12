@@ -1,8 +1,8 @@
 package grpc
 
 import (
-	"github.com/guilhermealvess/oauth-api/internal/interface/grpc/handler"
-	"github.com/guilhermealvess/oauth-api/internal/interface/grpc/pb"
+	"github.com/guilhermealvess/oauth-api/internal/http/grpc/handler"
+	"github.com/guilhermealvess/oauth-api/pkg/grpc/pb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -17,5 +17,5 @@ func NewServer() *grpc.Server {
 }
 
 func registerServices(server *grpc.Server) {
-	pb.RegisterApiServerServer(server, handler.NewApiServerHandler())
+	pb.RegisterApplicationServer(server, handler.NewApiServerHandler())
 }

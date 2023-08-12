@@ -7,13 +7,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestApiServer(t *testing.T) {
+func TestAppplication(t *testing.T) {
 	t.Run("successfully new api server", func(t *testing.T) {
 		const (
 			name   = "xpto api"
 			author = "fulano@example.com"
 		)
-		apiServer, err := NewApiServer(name, "", author)
+		apiServer, err := NewApplication(name, "", User{})
 
 		assert.NoError(t, err)
 		assert.Equal(t, apiServer.Name, name)
@@ -35,7 +35,7 @@ func TestApiServer(t *testing.T) {
 		}
 
 		for _, tc := range testCases {
-			_, err := NewApiServer(tc.name, tc.desc, tc.author)
+			_, err := NewApplication(tc.name, tc.desc, User{})
 			assert.Error(t, err)
 		}
 	})

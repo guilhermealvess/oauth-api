@@ -9,6 +9,7 @@ import (
 var Config struct {
 	DatabaseURL  string `env:"DATABASE_URL"`
 	RedisAddress string `env:"REDIS_ADDR"`
+	Secret       string `env:"SECRET"`
 }
 
 func init() {

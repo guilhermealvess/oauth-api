@@ -5,19 +5,19 @@ import (
 	"encoding/json"
 
 	"github.com/go-redis/redis/v8"
+	"github.com/guilhermealvess/oauth-api/internal/domain"
 	"github.com/guilhermealvess/oauth-api/internal/domain/entity"
-	"github.com/guilhermealvess/oauth-api/internal/domain/repository"
 )
 
-type apiServerRepository struct {
+type applicationRepository struct {
 	cacheClient *redis.Client
 }
 
-func NewApiServerRepository(r *redis.Client) repository.ApiServerRepository {
-	return apiServerRepository{r}
+func NewApiServerRepository(r *redis.Client) domain.ApplicationRepository {
+	return applicationRepository{r}
 }
 
-func (a apiServerRepository) Save(ctx context.Context, apiServer *entity.ApiServer) error {
+func (a applicationRepository) Save(ctx context.Context, apiServer *entity.Application) error {
 	key := apiServer.ID.String()
 	value, err := json.Marshal(*apiServer)
 	if err != nil {

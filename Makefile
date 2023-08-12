@@ -8,4 +8,4 @@ queries-generate:
 	sqlc generate
 
 protoc:
-	protoc --go_out=. --go-grpc_out=. proto/api_server.proto
+	protoc --go_out=. --go-grpc_out=. proto/*.proto

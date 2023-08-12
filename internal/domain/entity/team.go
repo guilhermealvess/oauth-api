@@ -7,35 +7,29 @@ import (
 	"github.com/google/uuid"
 )
 
-type ApiServer struct {
+type Team struct {
 	ID          uuid.UUID `validate:"required"`
 	Name        string    `validate:"required"`
 	Slug        string    `validate:"required"`
-	Description string
-	IsActive    bool      `validate:"required"`
-	CreatedBy   string    `validate:"required"`
 	CreatedAt   time.Time `validate:"required"`
 	UpdatedAt   time.Time `validate:"required"`
-	Permissions []*Permission
+	Description string
 }
 
-func NewApiServer(name, desc, author string) (*ApiServer, error) {
+func NewTeam(name, description string) (*Team, error) {
 	now := time.Now().UTC()
 	name = removeSpecialCharacters(name)
-	slug := slugFy(name)
-	api := ApiServer{
+	t := Team{
 		ID:          uuid.New(),
 		Name:        name,
-		Description: desc,
-		Slug:        slug,
-		IsActive:    true,
-		CreatedBy:   author,
+		Slug:        slugFy(name),
+		Description: description,
 		CreatedAt:   now,
 		UpdatedAt:   now,
 	}
-	return &api, api.Ok()
+	return &t, t.Ok()
 }
 
-func (a *ApiServer) Ok() error {
-	return validator.New().Struct(a)
+func (t *Team) Ok() error {
+	return validator.New().Struct(t)
 }

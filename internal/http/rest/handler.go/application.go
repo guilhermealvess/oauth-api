@@ -10,27 +10,30 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type ApiServerHandler struct {
-	usecase usecase.ApiUsecase
+type ApplicationHandler struct {
+	usecase usecase.ApplicationUseCase
 }
 
-func NewApiServerHandler() ApiServerHandler {
-	return ApiServerHandler{
-		usecase: usecase.NewApiUse(repository.NewApiServerRepository(redis.NewClient(&redis.Options{
-			Addr: config.Config.RedisAddress,
-			DB:   0,
-		}))),
+func NewApplicationHandler() ApplicationHandler {
+	cli := &redis.Options{
+		Addr: config.Config.RedisAddress,
+		DB:   0,
+	}
+
+	return ApplicationHandler{
+		usecase: usecase.NewApplicationUseCase(repository.NewApiServerRepository(redis.NewClient(cli)),
+			repository.NewUserRpository(redis.NewClient(cli))),
 	}
 }
 
-func (a ApiServerHandler) Create(c echo.Context) error {
+func (a ApplicationHandler) Create(c echo.Context) error {
 	ctx := c.Request().Context()
-	var request usecase.CreateApiServerInput
+	var request usecase.CreateApplication
 	if err := c.Bind(&request); err != nil {
 		return c.String(http.StatusBadRequest, err.Error())
 	}
 
-	output, err := a.usecase.CreateApiServer(ctx, request)
+	output, err := a.usecase.CreateApplication(ctx, request)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}

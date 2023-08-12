@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+option go_package = "pkg/grpc/pb";
+
+package grpc;
+
+service Application {
+    rpc Create (CreateApplicationRequest) returns (CreateApplicationResponse);
+}
+
+message CreateApplicationRequest {
+    string name = 1;
+    string desc = 2;
+    string createdBy = 3;
+    repeated CreatePermissionRequest permissions = 4;
+}
+
+message CreateApplicationResponse {
+    string ID = 1;
+    string name = 2;
+    optional string description = 3;
+    string createdBy = 4;
+    string slug = 5;
+    string teamID = 6;
+    repeated PermissionResponse permissions = 7;
+}
+
+message CreatePermissionRequest {
+    string applicationID = 1;
+    string applicationResource = 2;
+    string action = 3;
+}
+
+message PermissionResponse {
+    string ID = 1;
+    string applicationID = 2;
+    string applicationResource = 3;
+    string action = 4;
+    string createdBy = 5;
+}
